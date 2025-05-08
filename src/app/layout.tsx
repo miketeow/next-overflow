@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
+import { ReactNode } from "react";
 
-import Navbar from "@/components/navigation/navbar";
+import { SessionProvider } from "next-auth/react";
+
+import { auth } from "@/auth";
 import { Providers } from "@/components/providers";
+import { Toaster } from "@/components/ui/sonner";
 
 import "./globals.css";
 
@@ -25,21 +29,22 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+const RootLayout = async ({ children }: { children: ReactNode }) => {
+  const session = await auth();
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}
-      >
-        <Providers>
-          <Navbar />
-          {children}
-        </Providers>
-      </body>
+      <SessionProvider session={session}>
+        <body
+          className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}
+        >
+          <Providers>
+            {children}
+            <Toaster />
+          </Providers>
+        </body>
+      </SessionProvider>
     </html>
   );
-}
+};
+
+export default RootLayout;
