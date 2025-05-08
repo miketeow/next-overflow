@@ -43,7 +43,9 @@ const AuthForm = <T extends FieldValues>({
     defaultValues: defaultValues as DefaultValues<T>,
   });
 
-  const handleSubmit: SubmitHandler<T> = async () => {};
+  const handleSubmit: SubmitHandler<T> = async (data) => {
+    onSubmit(data);
+  };
   const buttonText = formType === "SIGN_IN" ? "Sign In" : "Sign Up";
   return (
     <Form {...form}>
