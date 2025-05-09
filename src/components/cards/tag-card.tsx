@@ -13,7 +13,13 @@ interface TagProps {
   showCount?: boolean;
   compact?: boolean;
 }
-const TagCard = ({ _id, name, questions, showCount, compact }: TagProps) => {
+const TagCard = ({
+  _id,
+  name,
+  questions,
+  showCount,
+  compact = false,
+}: TagProps) => {
   const iconClass = getDeviconClassName(name);
   return (
     <Link href={ROUTES.TAGS(_id)} className="flex justify-between gap-2">

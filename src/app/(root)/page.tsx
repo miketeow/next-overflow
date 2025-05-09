@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
 
+import HomeFilter from "@/components/filter/home-filter";
 import LocalSearch from "@/components/search/local-search";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/routes";
@@ -39,11 +40,18 @@ interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
 }
 const Home = async ({ searchParams }: SearchParams) => {
-  const { query = "" } = await searchParams;
+  const { query = "", filter } = await searchParams;
 
   const filteredQuestions = questions.filter((question) => {
-    return question.title.toLowerCase().includes(query?.toLowerCase());
+    const matchedQuery = question.title
+      .toLowerCase()
+      .includes(query?.toLowerCase());
+    const matchedFilter =
+      filter === "" ||
+      question.tags.some((tag) => tag.name.toLowerCase() === filter);
+    return matchedQuery && matchedFilter;
   });
+
   return (
     <>
       <section className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -63,7 +71,7 @@ const Home = async ({ searchParams }: SearchParams) => {
           otherClasses="flex-1"
         />
       </section>
-      {/* HomeFilter */}
+      <HomeFilter />
       <div className="mt-10 flex w-full flex-col gap-6">
         {filteredQuestions.map((question) => (
           <h1 key={question._id}>{question.title}</h1>
